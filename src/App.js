@@ -174,7 +174,7 @@ function App() {
             <Form data-form onSubmit={handleSubmit}>
                 <div className="container mt-4">
                     <div className="row">
-                        <div className="col-1 ">
+                        <div className="col-3 col-md-2 col-xl-1">
                             <select className="form-select w-auto" aria-label="Default select example" data-method defaultValue='GET'
                                 onChange={(e) => {
                                     setMethod(e.target.value)
@@ -184,7 +184,7 @@ function App() {
                                 <option value="POST">POST</option>
                             </select>
                         </div>
-                        <div className="col-10">
+                        <div className="col-9 col-md-10 col-xl-10">
                             <Form.Control data-url
                                 placeholder='Enter request URL'
                                 name='input'
@@ -194,7 +194,7 @@ function App() {
                                 }}
                             />
                         </div>
-                        <div className="col-1">
+                        <div className="col-12 col-xl-1">
                             <Button type='submit' className='w-100' onClick={() => setClick(!click)} disabled={url ===''}>
                                 Send
                             </Button>
