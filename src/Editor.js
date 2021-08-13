@@ -3,14 +3,16 @@ import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 
 
-export default function Editor({data, setData}) {
+export default function Editor({view, height, placeHolder, setData}) {
 
     return (
         <div>
             <JSONInput
                 id='a_unique_id'
+                viewOnly={view}
+                placeholder= {placeHolder === '' ? null : placeHolder}
                 locale={locale}
-                height='150px'
+                height={height}
                 width='100%'
                 colors={{default: '#1E1E1E'}}
                 onChange={setData}

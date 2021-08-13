@@ -1,146 +1,103 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import prettyBytes from 'pretty-bytes';
 import { useState, useEffect } from 'react';
 import { Form, Button, Tabs, Tab, TabPane, TabContainer } from 'react-bootstrap'
-import { EditorState, basicSetup } from "@codemirror/basic-setup";
-import { EditorView } from "@codemirror/view";
-import { json } from "@codemirror/lang-json";
 import Editor from './Editor';
-// import setupEditor from './setupEditor'
-
-
 
 function App() {
     const [data, setData] = useState('')
+    const [resData, setResData] = useState('')
     const [resDetails, setResDetails] = useState({})
     const [method, setMethod] = useState('GET')
     const [url, setUrl] = useState('')
     const [click, setClick] = useState(true)
 
-    // useEffect(() => {
-   
-    //     const basicExtentions = [
-    //         basicSetup,
-    //         json(),
-    //         EditorState.tabSize.of(2)
-    //     ]
-    //     const reqBody = document.querySelector('[data-json-request-body]')
-    //     const requestEditor = new EditorView({
-    //         state: EditorState.create({
-    //             doc: "{\n\t\n}",
-    //             extensions: basicExtentions
-    //         }),
-    //         parent: reqBody
-    //     })
-    //     const {requestEditor} = setupEditor()
+    const statusText = code => {
+        switch (code) {
+            case 200:
+                return "OK"
         
-    //     setData(requestEditor.state.doc.toString())
+            case 201:
+                return "Created"
+      
+        
+            case 400:
+                return "Bad Request"
+ 
+        
+            case 404:
+                return "Not Found"
         
         
-    // }, [])
+            default: 
+                return ""
+          
+        }
+    }
 
     const handleSubmit = (e) => {
+
         e.preventDefault()
         const paramsContainer = document.querySelector('[data-params-container]')
         const headersContainer = document.querySelector('[data-headers-container]')
-        const resBody = document.querySelector('[data-body-container]')
-        const basicExtentions = [
-            basicSetup,
-            json(),
-            EditorState.tabSize.of(2)
-        ]
-        axios.interceptors.request.use(request => {
-            request.customData = request.customData || {}
-            request.customData.startTime = new Date().getTime()
-            return request
 
-        })
-        function updateEndTime(response) {
-            response.customData = response.customData || {}
-            response.customData.time = new Date().getTime() - response.config.customData.startTime
-            return response
-        }
-        axios.interceptors.response.use(updateEndTime, e => {
-            return Promise.reject(updateEndTime(e.response))
-        })
+
         axios({
             url,
             method,
             data: data.jsObject,
             params: keyValuePairToObjects(paramsContainer),
             headers: keyValuePairToObjects(headersContainer)
-        })
-            .catch(e => e)
+        }).catch(e => e)
             .then(res => {
                 document.querySelector('[data-response-section]').classList.remove('d-none')
                 updateResponseDetails(res)
-                updateResponseEditor(res.data)
                 updateResponseHeaders(res)
                 console.log(res)
             })
-   
-      
-
-        const responseEditor = new EditorView({
-            state: EditorState.create({
-                doc: "{}",
-                extensions: [...basicExtentions, EditorView.editable.of(false)]
-            }),
-            parent: resBody
-        })
-
-
-        function updateResponseEditor(data) {
-            responseEditor.dispatch({
-                changes: {
-                    from: 0,
-                    to: responseEditor.state.doc.length,
-                    insert: JSON.stringify(data, null, 2)
-                }
-            })
         }
-    }
 
 
-    const keyValuePairToObjects = (container) => {
-        const pairs = container.querySelectorAll('[data-key-value-pair]')
-        return [...pairs].reduce((data, pair) => {
-            const key = pair.querySelector('[data-key]').value
-            const value = pair.querySelector('[data-value]').value
+        const keyValuePairToObjects = (container) => {
+            const pairs = container.querySelectorAll('[data-key-value-pair]')
+            return [...pairs].reduce((data, pair) => {
+                const key = pair.querySelector('[data-key]').value
+                const value = pair.querySelector('[data-value]').value
 
-            if (key === '') return data
-            return { ...data, [key]: value }
-        }, {})
-    }
+                if (key === '') return data
+                return { ...data, [key]: value }
+            }, {})
+        }
 
-    const updateResponseDetails = (res) => {
-        setResDetails({
-            status: res.status,
-            text: res.statusText,
-            time: res.customData? res.customData.time: 'Error',
-            size: prettyBytes(
-                res.data?
-                JSON.stringify(res.data).length: 0 + res.headers? JSON.stringify(res.headers).length: 0
-            )
-        })
+        const updateResponseDetails = (res) => {
+            setResData(res.data)
+            setResDetails({
+                status: res.status,
+                text: statusText(res.status),
+                time: res.customData ? res.customData.time : 'Error',
+                size: prettyBytes(
+                    res.data ?
+                        JSON.stringify(res.data).length : 0 + res.headers ? JSON.stringify(res.headers).length : 0
+                )
+            })
     }
 
     const updateResponseHeaders = (res) => {
         const responseHeaderContainer = document.querySelector('[data-res-headers]')
         responseHeaderContainer.innerHTML = ""
         if (res.headers) {
-             Object.entries(res.headers).forEach(([key, value]) => {
-            const keyElement = document.createElement('div')
-            keyElement.textContent = key
-            responseHeaderContainer.append(keyElement)
-            const valueElement = document.createElement('div')
-            valueElement.textContent = value
-            responseHeaderContainer.append(valueElement)
-        })  
+            Object.entries(res.headers).forEach(([key, value]) => {
+                const keyElement = document.createElement('div')
+                keyElement.textContent = key
+                responseHeaderContainer.append(keyElement)
+                const valueElement = document.createElement('div')
+                valueElement.textContent = value
+                responseHeaderContainer.append(valueElement)
+            })
         }
-      
+
     }
 
     useEffect(() => {
@@ -165,14 +122,13 @@ function App() {
             })
             return element
         }
-
     }, [])
 
     return (
         <div className="container" >
-            <div className="display-6 text-center mt-3"><img src="/favicon.ico" alt="" style={{height: '50px', marginBottom:'8px'}}/> <span>GetMan</span></div>
+            <div className="display-6 text-center mt-3"><img src="/favicon.ico" alt="" style={{ height: '50px', marginBottom: '8px' }} /> <span>GetMan</span></div>
             <Form data-form onSubmit={handleSubmit}>
-                <div className="container mt-4">
+                <div className="container mt-3">
                     <div className="row">
                         <div className="col-3 col-md-2 col-xl-1">
                             <select className="form-select w-auto" aria-label="Default select example" data-method defaultValue='GET'
@@ -195,12 +151,12 @@ function App() {
                             />
                         </div>
                         <div className="col-12 col-xl-1">
-                            <Button type='submit' className='w-100' onClick={() => setClick(!click)} disabled={url ===''}>
+                            <Button type='submit' className='w-100' onClick={() => setClick(!click)} disabled={url === ''}>
                                 Send
                             </Button>
                         </div>
                     </div>
-                    <div className="container border-outline mt-4">
+                    <div className="container border-outline mt-3 p-0">
                         <TabContainer>
                             <Tabs
                                 defaultActiveKey="params"
@@ -211,20 +167,20 @@ function App() {
                                 <Tab eventKey="params" title="Params">
                                     <TabPane eventKey='params' id='params' >
                                         <div data-params-container>
-                                            <Button data-add-params variant='success' className='outline' size='sm'>Add</Button>
+                                            <Button data-add-params variant='success' className='outline' size='sm'><FontAwesomeIcon icon={faPlus} /></Button>
                                         </div>
                                     </TabPane>
                                 </Tab>
                                 <Tab eventKey="headers" title="Headers">
                                     <TabPane eventKey='headers' id='headers'>
                                         <div data-headers-container>
-                                            <Button data-add-headers variant='success' className='outline' size='sm'>Add</Button>
+                                            <Button data-add-headers variant='success' className='outline' size='sm'><FontAwesomeIcon icon={faPlus} /></Button>
                                         </div>
                                     </TabPane>
                                 </Tab>
                                 <Tab eventKey="json" title="JSON" >
                                     <TabPane eventKey='json' id='json'>
-                                        <div data-json-request-body className='overflow-auto bordered' style={{ maxHeight: '200px', border:'1px solid grey'}} > <Editor setData={setData} /></div>
+                                        <div data-json-request-body className='overflow-auto bordered' style={{ maxHeight: '200px', border: '1px solid grey' }} > <Editor height={'150px'} setData={setData} /></div>
                                     </TabPane>
                                 </Tab>
 
@@ -235,14 +191,17 @@ function App() {
                     </div>
                 </div>
             </Form>
-            <div className="mt-3 p-2 d-none" data-response-section >
+            <div className="mt-3 px-3 d-none" data-response-section >
                 <h6>Response:</h6>
                 <div className="d-flex">
                     <div className="me-3">
-                        Status: <span>{resDetails.status}</span> <span className='text-success bold' ><strong>{resDetails.text}</strong></span>
+                        Status: <span>{resDetails.status}</span> <span className={`${resDetails.status === 404 ? 'text-danger' : resDetails.status === 400 ? 'text-warning': 'text-success'} `} >{resDetails.text}</span>
                     </div>
                     <div className="me-3">
-                        Time: <span>{resDetails.time}</span>ms
+                        {
+                            resDetails.time && <span>Time: {resDetails.time}ms</span>
+                        }
+
                     </div>
                     <div className="me-3">
                         Size: <span >{resDetails.size} </span>
@@ -258,7 +217,7 @@ function App() {
                     <Tab eventKey="body" title="Body">
                         <TabPane eventKey='body' id='body' >
                             <div data-body-container>
-
+                                <Editor view={true} height={'300px'} placeHolder={resData} />
                             </div>
                         </TabPane>
                     </Tab>
@@ -278,7 +237,7 @@ function App() {
                     <Button variant='danger' className='outline' size='sm' data-remove-btn><FontAwesomeIcon icon={faTrash} /> </Button>
                 </div>
             </template>
-           
+
         </div>
     );
 }
