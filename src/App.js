@@ -5,6 +5,7 @@ import prettyBytes from 'pretty-bytes';
 import { useState, useEffect } from 'react';
 import { Form, Button, Tabs, Tab, TabPane, TabContainer } from 'react-bootstrap'
 import Editor from './Editor';
+import ReactJson from 'react-json-view'
 
 function App() {
     const [data, setData] = useState('')
@@ -189,7 +190,7 @@ function App() {
                     </div>
                 </div>
             </Form>
-            <div className="mt-3 px-3 d-none" data-response-section >
+            <div className="my-3 p-3 d-none" data-response-section >
                 <h6>Response:</h6>
                 <div className="d-flex">
                     <div className="me-3">
@@ -215,7 +216,12 @@ function App() {
                     <Tab eventKey="body" title="Body">
                         <TabPane eventKey='body' id='body' >
                             <div data-body-container>
-                                <Editor view={true} height={'300px'} placeHolder={resData} />
+                                <ReactJson
+                                    src={resData}
+                                    style={{ overflowY: 'scroll', height: '350px' }}
+                                    collapseStringsAfterLength={100} indentWidth={2}
+                                    displayDataTypes={false}
+                                />
                             </div>
                         </TabPane>
                     </Tab>
