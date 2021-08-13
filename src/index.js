@@ -10,23 +10,23 @@ import axios from 'axios'
 axios.interceptors.request.use(request => {
     request.customData = {}
     request.customData.startTime = new Date().getTime()
-return request
+    return request
 
 })
 function updateEndTime(response) {
-    response.customData =  {}
+    response.customData = {}
     response.customData.time = new Date().getTime() - response.config.customData.startTime
-return response
+    return response
 }
 axios.interceptors.response.use(updateEndTime, e => {
-return Promise.reject(updateEndTime(e.response))
+    return Promise.reject(updateEndTime(e.response))
 })
 
 ReactDOM.render(
 
     <App />
- ,
-  document.getElementById('root')
+    ,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
