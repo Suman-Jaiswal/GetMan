@@ -18,31 +18,29 @@ function App() {
         switch (code) {
             case 200:
                 return "OK"
-        
+
             case 201:
                 return "Created"
-      
-        
+
+
             case 400:
                 return "Bad Request"
- 
-        
+
+
             case 404:
                 return "Not Found"
-        
-        
-            default: 
+
+
+            default:
                 return ""
-          
+
         }
     }
 
     const handleSubmit = (e) => {
-
         e.preventDefault()
         const paramsContainer = document.querySelector('[data-params-container]')
         const headersContainer = document.querySelector('[data-headers-container]')
-
 
         axios({
             url,
@@ -50,38 +48,38 @@ function App() {
             data: data.jsObject,
             params: keyValuePairToObjects(paramsContainer),
             headers: keyValuePairToObjects(headersContainer)
-        }).catch(e => e)
+        })
+            .catch(e => e)
             .then(res => {
                 document.querySelector('[data-response-section]').classList.remove('d-none')
                 updateResponseDetails(res)
                 updateResponseHeaders(res)
                 console.log(res)
             })
-        }
+    }
 
+    const updateResponseDetails = (res) => {
+        setResData(res.data)
+        setResDetails({
+            status: res.status,
+            text: statusText(res.status),
+            time: res.customData ? res.customData.time : 'Error',
+            size: prettyBytes(
+                res.data ?
+                    JSON.stringify(res.data).length : 0 + res.headers ? JSON.stringify(res.headers).length : 0
+            )
+        })
+    }
 
-        const keyValuePairToObjects = (container) => {
-            const pairs = container.querySelectorAll('[data-key-value-pair]')
-            return [...pairs].reduce((data, pair) => {
-                const key = pair.querySelector('[data-key]').value
-                const value = pair.querySelector('[data-value]').value
+    const keyValuePairToObjects = (container) => {
+        const pairs = container.querySelectorAll('[data-key-value-pair]')
+        return [...pairs].reduce((data, pair) => {
+            const key = pair.querySelector('[data-key]').value
+            const value = pair.querySelector('[data-value]').value
 
-                if (key === '') return data
-                return { ...data, [key]: value }
-            }, {})
-        }
-
-        const updateResponseDetails = (res) => {
-            setResData(res.data)
-            setResDetails({
-                status: res.status,
-                text: statusText(res.status),
-                time: res.customData ? res.customData.time : 'Error',
-                size: prettyBytes(
-                    res.data ?
-                        JSON.stringify(res.data).length : 0 + res.headers ? JSON.stringify(res.headers).length : 0
-                )
-            })
+            if (key === '') return data
+            return { ...data, [key]: value }
+        }, {})
     }
 
     const updateResponseHeaders = (res) => {
@@ -195,7 +193,7 @@ function App() {
                 <h6>Response:</h6>
                 <div className="d-flex">
                     <div className="me-3">
-                        Status: <span>{resDetails.status}</span> <span className={`${resDetails.status === 404 ? 'text-danger' : resDetails.status === 400 ? 'text-warning': 'text-success'} `} >{resDetails.text}</span>
+                        Status: <span>{resDetails.status}</span> <span className={`${resDetails.status === 404 ? 'text-danger' : resDetails.status === 400 ? 'text-warning' : 'text-success'} `} >{resDetails.text}</span>
                     </div>
                     <div className="me-3">
                         {
