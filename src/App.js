@@ -46,7 +46,7 @@ function App() {
         axios({
             url,
             method,
-            data: data.jsObject,
+            data: data.json,
             params: keyValuePairToObjects(paramsContainer),
             headers: keyValuePairToObjects(headersContainer)
         })
@@ -125,9 +125,9 @@ function App() {
 
     return (
         <div className="container" >
-            <div className="display-6 text-center mt-3"><img src="/favicon.ico" alt="" style={{ height: '50px', marginBottom: '8px' }} /> <span>GetMan</span></div>
+            <div className="display-6 text-center mt-2"><img src="/favicon.ico" alt="" style={{ height: '50px', marginBottom: '8px' }} /> <span>GetMan</span></div>
             <Form data-form onSubmit={handleSubmit}>
-                <div className="container mt-3">
+                <div className="container mt-2">
                     <div className="row">
                         <div className="col-3 col-md-2 col-xl-1">
                             <select className="form-select w-auto" aria-label="Default select example" data-method defaultValue='GET'
@@ -190,7 +190,7 @@ function App() {
                     </div>
                 </div>
             </Form>
-            <div className="my-3 p-3 d-none" data-response-section >
+            <div className=" p-2 d-none" data-response-section >
                 <h6>Response:</h6>
                 <div className="d-flex">
                     <div className="me-3">
@@ -218,7 +218,7 @@ function App() {
                             <div data-body-container>
                                 <ReactJson
                                     src={resData}
-                                    style={{ overflowY: 'scroll', height: '350px' }}
+                                    style={{ overflowY: 'scroll', height: '360px' }}
                                     collapseStringsAfterLength={100} indentWidth={2}
                                     displayDataTypes={false}
                                 />

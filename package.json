@@ -1,49 +1,79 @@
 {
-  "name": "getman",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/react-fontawesome": "^0.1.14",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.1",
-    "bootstrap": "^5.0.2",
-    "pretty-bytes": "^5.6.0",
-    "react": "^17.0.2",
-    "react-bootstrap": "^1.6.1",
-    "react-dom": "^17.0.2",
-    "react-json-editor-ajrm": "^2.5.13",
-    "react-json-view": "^1.21.3",
-    "react-scripts": "4.0.3",
-    "react-spinners": "^0.11.0",
-    "web-vitals": "^1.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {}
+    "name": "getman",
+    "author": "Suman Jaiswal",
+    "description": "Send request to an API easily",
+    "homepage": "./",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.35",
+        "@fortawesome/free-solid-svg-icons": "^5.15.3",
+        "@fortawesome/react-fontawesome": "^0.1.14",
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "axios": "^0.21.1",
+        "bootstrap": "^5.0.2",
+        "concurrently": "^6.2.1",
+        "electron-is-dev": "^2.0.0",
+        "pretty-bytes": "^5.6.0",
+        "react": "^17.0.2",
+        "react-bootstrap": "^1.6.1",
+        "react-dom": "^17.0.2",
+        "react-json-editor-ajrm": "^2.5.13",
+        "react-json-view": "^1.21.3",
+        "react-scripts": "4.0.3",
+        "react-spinners": "^0.11.0",
+        "wait-on": "^6.0.0",
+        "web-vitals": "^1.0.1"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/start-electron.js",
+        "preelectron-package": "npm run build"
+    },
+    "build": {
+        "appId": "getman.netlify.app",
+        "productName": "GetMan",
+        "copyright": "Copyright © 2021 ${author}",
+        "win": {
+          "icon": "./public/icons/png/favicon.png" 
+        },
+        "files": [
+          "./build/**/*",
+          "./dist/**/*",
+          "./node_modules/**/*",
+          "./public/**/*",     
+          "*.js"
+        ],
+        "directories": {
+          "buildResources": "public"
+        }
+      },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "electron": "^13.1.9",
+        "electron-builder": "^22.11.7"
+    }
 }
