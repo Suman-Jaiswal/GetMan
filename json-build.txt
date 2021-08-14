@@ -16,3 +16,9 @@
           "buildResources": "public"
         }
       },
+
+
+
+        "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/start-electron.js",
+        "preelectron-package": "npm run build"

@@ -31,10 +31,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-        "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/start-electron.js",
-        "preelectron-package": "npm run build"
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [
