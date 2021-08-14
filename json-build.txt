@@ -1,0 +1,18 @@
+   "build": {
+        "appId": "getman.netlify.app",
+        "productName": "GetMan",
+        "copyright": "Copyright © 2021 ${author}",
+        "win": {
+          "icon": "./public/icons/png/favicon.png" 
+        },
+        "files": [
+          "./build/**/*",
+          "./dist/**/*",
+          "./node_modules/**/*",
+          "./public/**/*",     
+          "*.js"
+        ],
+        "directories": {
+          "buildResources": "public"
+        }
+      },

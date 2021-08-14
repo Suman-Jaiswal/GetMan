@@ -36,24 +36,6 @@
         "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=build/start-electron.js",
         "preelectron-package": "npm run build"
     },
-    "build": {
-        "appId": "getman.netlify.app",
-        "productName": "GetMan",
-        "copyright": "Copyright © 2021 ${author}",
-        "win": {
-          "icon": "./public/icons/png/favicon.png" 
-        },
-        "files": [
-          "./build/**/*",
-          "./dist/**/*",
-          "./node_modules/**/*",
-          "./public/**/*",     
-          "*.js"
-        ],
-        "directories": {
-          "buildResources": "public"
-        }
-      },
     "eslintConfig": {
         "extends": [
             "react-app",
