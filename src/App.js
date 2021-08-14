@@ -23,14 +23,17 @@ function App() {
             case 201:
                 return "Created"
 
+            case 202:
+                return "Updated"
+
+            case 204:
+                return "Deleted"
 
             case 400:
                 return "Bad Request"
 
-
             case 404:
                 return "Not Found"
-
 
             default:
                 return ""
@@ -46,7 +49,7 @@ function App() {
         axios({
             url,
             method,
-            data: data.json,
+            data: data.jsObject,
             params: keyValuePairToObjects(paramsContainer),
             headers: keyValuePairToObjects(headersContainer)
         })
@@ -60,7 +63,14 @@ function App() {
     }
 
     const updateResponseDetails = (res) => {
-        setResData(res.data)
+        if (res.data==='') {
+            if (res.status===204) {
+                setResData({"message": "Deleted Successfully!"})
+            }
+            else setResData({"message": "No Data!"})
+        }
+        else setResData(res.data)
+     
         setResDetails({
             status: res.status,
             text: statusText(res.status),
@@ -137,6 +147,8 @@ function App() {
                             >
                                 <option value='GET' >GET</option>
                                 <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
                             </select>
                         </div>
                         <div className="col-9 col-md-10 col-xl-10">
