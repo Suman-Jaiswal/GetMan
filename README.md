@@ -1,3 +1,3 @@
 # GetMan
 ### A Postman alternative app to send CRUD request from an API.
-## Deployed [![here]('https://getman.netlify.app/')]
+## <a href="https://getman.netlify.app/ >here</a>
